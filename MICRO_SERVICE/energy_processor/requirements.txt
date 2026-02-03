@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+sqlmodel
+psycopg2-binary
+pydantic
+python-multipart
+pytest
+requests
+aiofiles
