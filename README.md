@@ -28,9 +28,21 @@ cd Energy_Process
 #### Backend
 ```bash
 cd backend
+python -m virtualenv venv  # or: python -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload
+
+# Option 1: Use the startup script (recommended)
+./start_dev.sh
+
+# Option 2: Run directly with python -m
+python -m uvicorn app.main:app --reload
+
+# Option 3: Clear shell cache first
+hash -r && uvicorn app.main:app --reload
 ```
+
+**Important**: If you get `ModuleNotFoundError: No module named 'fastapi'`, see [`backend/README_VENV.md`](backend/README_VENV.md) for troubleshooting.
 
 #### Frontend
 ```bash
