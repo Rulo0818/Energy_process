@@ -57,3 +57,5 @@ Energy_Process/
 │   │   ├── models/   # Modelos de base de datos
 │   │   ├── schemas/  # Esquemas Pydantic
 │   │   ├── services/ # Lógica de negocio
+
+
