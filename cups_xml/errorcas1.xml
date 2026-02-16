@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<energiaExcedentaria>
+    <!-- Registro 1: CUPS inválido (no empieza por ES) -->
+    <registro>
+        <cupsCliente>XX0031405098401001</cupsCliente>
+        <instalacionGen>GEN-ERR-001</instalacionGen>
+        <fechaDesde>2025-01-01</fechaDesde>
+        <fechaHasta>2025-01-31</fechaHasta>
+        <tipoAutoconsumo>12</tipoAutoconsumo>
+        <energiaNetaGen>
+            <p1>10</p1><p2>10</p2><p3>10</p3><p4>10</p4><p5>10</p5><p6>10</p6>
+        </energiaNetaGen>
+        <energiaAutoconsumida>
+            <p1>5</p1><p2>5</p2><p3>5</p3><p4>5</p4><p5>5</p5><p6>5</p6>
+        </energiaAutoconsumida>
+        <pagoTDA>
+            <p1>1</p1><p2>1</p2><p3>1</p3><p4>1</p4><p5>1</p5><p6>1</p6>
+        </pagoTDA>
+    </registro>
+    <!-- Registro 2: Periodos insuficientes (solo 3) -->
+    <registro>
+        <cupsCliente>ES0031405098401001</cupsCliente>
+        <instalacionGen>GEN-ERR-002</instalacionGen>
+        <fechaDesde>2025-02-01</fechaDesde>
+        <fechaHasta>2025-02-28</fechaHasta>
+        <tipoAutoconsumo>12</tipoAutoconsumo>
+        <energiaNetaGen>
+            <p1>10</p1><p2>10</p2><p3>10</p3>
+        </energiaNetaGen>
+        <energiaAutoconsumida>
+            <p1>5</p1><p2>5</p2><p3>5</p3>
+        </energiaAutoconsumida>
+        <pagoTDA>
+            <p1>1</p1><p2>1</p2><p3>1</p3>
+        </pagoTDA>
+    </registro>
+    <!-- Registro 3: Fecha hasta menor que desde -->
+    <registro>
+        <cupsCliente>ES0031405098401001</cupsCliente>
+        <instalacionGen>GEN-ERR-003</instalacionGen>
+        <fechaDesde>2025-05-01</fechaDesde>
+        <fechaHasta>2025-04-01</fechaHasta>
+        <tipoAutoconsumo>12</tipoAutoconsumo>
+        <energiaNetaGen>
+            <p1>10</p1><p2>10</p2><p3>10</p3><p4>10</p4><p5>10</p5><p6>10</p6>
+        </energiaNetaGen>
+        <energiaAutoconsumida>
+            <p1>5</p1><p2>5</p2><p3>5</p3><p4>5</p4><p5>5</p5><p6>5</p6>
+        </energiaAutoconsumida>
+        <pagoTDA>
+            <p1>1</p1><p2>1</p2><p3>1</p3><p4>1</p4><p5>1</p5><p6>1</p6>
+        </pagoTDA>
+    </registro>
+</energiaExcedentaria>

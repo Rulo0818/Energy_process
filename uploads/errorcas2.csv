@@ -1,0 +1,3 @@
+cups_cliente,instalacion_gen,fecha_desde_1,fecha_hasta_1,tipo_autoconsumo,energia_neta_gen_1,energia_neta_gen_2,energia_neta_gen_3,energia_neta_gen_4,energia_neta_gen_5,energia_neta_gen_6,energia_autoconsumida_1,energia_autoconsumida_2,energia_autoconsumida_3,energia_autoconsumida_4,energia_autoconsumida_5,energia_autoconsumida_6,pago_tda_1,pago_tda_2,pago_tda_3,pago_tda_4,pago_tda_5,pago_tda_6
+ES0000000000000000,NON-EXISTENT,2025-01-01,2025-01-31,12,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+ES0031405098401001,INVALID-TYPE,2025-01-01,2025-01-31,99,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1

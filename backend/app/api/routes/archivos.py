@@ -58,6 +58,18 @@ async def upload_archivo(
     Sube un archivo de peajes para procesamiento.
     Detecta duplicados por hash SHA256.
     """
+    from app.models.usuario import Usuario
+    # Verificar que el usuario existe, si no, usar el primero disponible
+    usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
+    if not usuario:
+        usuario = db.query(Usuario).first()
+        if not usuario:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="No existe el usuario especificado y no hay usuarios en la base de datos. Ejecute init_db.py",
+            )
+        usuario_id = usuario.id
+
     contenido = await file.read()
     hash_archivo = hashlib.sha256(contenido).hexdigest()
 
@@ -68,11 +80,17 @@ async def upload_archivo(
             detail=f"Archivo duplicado. Ya procesado con ID {archivo_existente.id}",
         )
 
-    upload_dir = Path(settings.UPLOAD_DIR)
-    upload_dir.mkdir(parents=True, exist_ok=True)
-    ruta_guardado = upload_dir / (file.filename or "sin_nombre.xml")
-    ruta_guardado.write_bytes(contenido)
-    ruta_str = str(ruta_guardado)
+    try:
+        upload_dir = Path(settings.UPLOAD_DIR)
+        upload_dir.mkdir(parents=True, exist_ok=True)
+        ruta_guardado = upload_dir / (file.filename or "sin_nombre.xml")
+        ruta_guardado.write_bytes(contenido)
+        ruta_str = str(ruta_guardado)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al guardar el archivo en el servidor: {e}",
+        )
 
     nuevo_archivo = ArchivoProcesado(
         usuario_id=usuario_id,

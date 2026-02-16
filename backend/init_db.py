@@ -6,28 +6,33 @@ Uso: python init_db.py
 
 from datetime import datetime, timedelta
 from app.database import SessionLocal, Base, engine
-from app.models import Usuario, Cliente, ArchivoProcesado, EnergiaExcedentaria
+from app.models import Usuario, Cliente, ArchivoProcesado, EnergiaExcedentaria, TipoAutoconsumo
 from decimal import Decimal
 
 def init_db():
     """Crea tablas y agrega datos de prueba."""
     
-    # Crear todas las tablas
-    print("Creando tablas...")
+    # Drop and recreate for schema changes in development
+    print("Sincronizando esquema de tablas...")
+    Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     
     db = SessionLocal()
     
     try:
-        # Verificar si ya hay datos
-        if db.query(Usuario).first():
-            print("⚠️  La BD ya tiene datos. Limpiando datos de prueba antiguos...")
-            db.query(EnergiaExcedentaria).delete()
-            db.query(ArchivoProcesado).delete()
-            db.query(Cliente).delete()
-            db.query(Usuario).delete()
-            db.commit()
-        
+        # Crear tipos de autoconsumo (necesarios para las claves foráneas)
+        print("Creando tipos de autoconsumo...")
+        tipos = [
+            TipoAutoconsumo(codigo=12, descripcion="Individual con excedentes y compensación"),
+            TipoAutoconsumo(codigo=41, descripcion="Colectivo sin excedentes"),
+            TipoAutoconsumo(codigo=42, descripcion="Colectivo con excedentes y compensación"),
+            TipoAutoconsumo(codigo=43, descripcion="Colectivo con excedentes no acogido a compensación"),
+            TipoAutoconsumo(codigo=51, descripcion="Próxima a través de red"),
+        ]
+        db.add_all(tipos)
+        db.commit()
+        print(f"✓ {len(tipos)} tipos de autoconsumo creados")
+
         # Crear usuarios
         print("Creando usuarios...")
         usuarios = [
@@ -171,6 +176,7 @@ def init_db():
             EnergiaExcedentaria(
                 archivo_id=archivos[0].id,
                 cliente_id=clientes[0].id,
+                cups_cliente=clientes[0].cups,
                 instalacion_gen="ES0031405098401001_GEN",
                 tipo_autoconsumo=12,
                 linea_archivo=1,
@@ -183,6 +189,7 @@ def init_db():
             EnergiaExcedentaria(
                 archivo_id=archivos[0].id,
                 cliente_id=clientes[1].id,
+                cups_cliente=clientes[1].cups,
                 instalacion_gen="ES0031405098401002_GEN",
                 tipo_autoconsumo=41,
                 linea_archivo=2,
@@ -195,6 +202,7 @@ def init_db():
             EnergiaExcedentaria(
                 archivo_id=archivos[1].id,
                 cliente_id=clientes[2].id,
+                cups_cliente=clientes[2].cups,
                 instalacion_gen="ES0031405098401003_GEN",
                 tipo_autoconsumo=12,
                 linea_archivo=1,
@@ -207,6 +215,7 @@ def init_db():
             EnergiaExcedentaria(
                 archivo_id=archivos[1].id,
                 cliente_id=clientes[3].id,
+                cups_cliente=clientes[3].cups,
                 instalacion_gen="ES0031405098401004_GEN",
                 tipo_autoconsumo=51,
                 linea_archivo=2,
@@ -220,13 +229,11 @@ def init_db():
         db.add_all(registros_energia)
         db.commit()
         print(f"✓ {len(registros_energia)} registros de energía creados")
-        db.add_all(registros_energia)
-        db.commit()
-        print(f"✓ {len(registros_energia)} registros de energía creados")
         
         print("\n✅ Base de datos inicializada correctamente!")
         print(f"  - Usuarios: {db.query(Usuario).count()}")
         print(f"  - Clientes: {db.query(Cliente).count()}")
+        print(f"  - Tipos Autoconsumo: {db.query(TipoAutoconsumo).count()}")
         print(f"  - Archivos: {db.query(ArchivoProcesado).count()}")
         print(f"  - Registros de energía: {db.query(EnergiaExcedentaria).count()}")
         

@@ -17,7 +17,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      // Por ahora, simular login (después se conectará con backend)
+      // Por ahora, simular login basado en los usuarios de init_db.py
       if (email === "admin@example.com" && password === "admin123") {
         const userData = {
           id: 1,
@@ -27,12 +27,22 @@ export default function Login() {
         };
         login(userData);
         navigate("/");
-      } else if (email === "user@example.com" && password === "user123") {
+      } else if (email === "operador1@example.com" && password === "operador123") {
         const userData = {
           id: 2,
+          email: "operador1@example.com",
+          nombre: "Operador Uno",
+          rol: "operador"
+        };
+        login(userData);
+        navigate("/");
+      } else if (email === "user@example.com" && password === "user123") {
+        // Mantener este para compatibilidad si el usuario lo usaba
+        const userData = {
+          id: 1, // Mapear a admin por ahora
           email: "user@example.com",
-          nombre: "Usuario",
-          rol: "usuario"
+          nombre: "Usuario Test",
+          rol: "admin"
         };
         login(userData);
         navigate("/");

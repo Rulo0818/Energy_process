@@ -17,8 +17,3 @@
         </pagoTDA>
     </registro>
 
-
-Atomicity: Todo o nada (si falla, nada se guarda)
-Consistency: Datos siempre válidos
-Isolation: Operaciones no se interfieren
-Durability: Datos permanentes
