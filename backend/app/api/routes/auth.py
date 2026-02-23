@@ -35,11 +35,18 @@ def login(
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    # Verificar contraseña
-    if not verify_password(login_data.password, user.password_hash):
+    # Verificar contraseña (si el hash en BD es inválido, passlib lanza y daría 500)
+    try:
+        if not verify_password(login_data.password, user.password_hash):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Usuario o contraseña incorrectos",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Usuario o contraseña incorrectos",
+            detail="Usuario o contraseña incorrectos. Si acaba de instalar, ejecute init_db.py o scripts/actualizar_passwords.py.",
             headers={"WWW-Authenticate": "Bearer"},
         )
     
@@ -86,10 +93,23 @@ def login_form(
     # Buscar usuario
     user = db.query(Usuario).filter(Usuario.username == form_data.username).first()
     
-    if not user or not verify_password(form_data.password, user.password_hash):
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Usuario o contraseña incorrectos",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    try:
+        if not verify_password(form_data.password, user.password_hash):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Usuario o contraseña incorrectos",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Usuario o contraseña incorrectos. Ejecute init_db.py o scripts/actualizar_passwords.py.",
             headers={"WWW-Authenticate": "Bearer"},
         )
     

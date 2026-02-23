@@ -7,6 +7,7 @@ Uso: python init_db.py
 from datetime import datetime, timedelta
 from app.database import SessionLocal, Base, engine
 from app.models import Usuario, Cliente, ArchivoProcesado, EnergiaExcedentaria, TipoAutoconsumo
+from app.utils.auth import get_password_hash
 from decimal import Decimal
 
 def init_db():
@@ -33,13 +34,13 @@ def init_db():
         db.commit()
         print(f"✓ {len(tipos)} tipos de autoconsumo creados")
 
-        # Crear usuarios
+        # Crear usuarios (contraseñas reales para login API)
         print("Creando usuarios...")
         usuarios = [
             Usuario(
                 username="admin",
                 email="admin@example.com",
-                password_hash="$2b$12$hash_placeholder",
+                password_hash=get_password_hash("admin123"),
                 nombre_completo="Administrador",
                 rol="admin",
                 activo=True
@@ -47,7 +48,7 @@ def init_db():
             Usuario(
                 username="operador1",
                 email="operador1@example.com",
-                password_hash="$2b$12$hash_placeholder",
+                password_hash=get_password_hash("operador123"),
                 nombre_completo="Operador Uno",
                 rol="operador",
                 activo=True
@@ -55,7 +56,7 @@ def init_db():
             Usuario(
                 username="operador2",
                 email="operador2@example.com",
-                password_hash="$2b$12$hash_placeholder",
+                password_hash=get_password_hash("operador123"),
                 nombre_completo="Operador Dos",
                 rol="operador",
                 activo=True
@@ -63,7 +64,7 @@ def init_db():
             Usuario(
                 username="consultor",
                 email="consultor@example.com",
-                password_hash="$2b$12$hash_placeholder",
+                password_hash=get_password_hash("consultor123"),
                 nombre_completo="Consultor",
                 rol="consultor",
                 activo=True
@@ -236,6 +237,11 @@ def init_db():
         print(f"  - Tipos Autoconsumo: {db.query(TipoAutoconsumo).count()}")
         print(f"  - Archivos: {db.query(ArchivoProcesado).count()}")
         print(f"  - Registros de energía: {db.query(EnergiaExcedentaria).count()}")
+        print("\n📋 Credenciales de login (API usa 'username', no email):")
+        print("   admin     / admin123")
+        print("   operador1 / operador123")
+        print("   operador2 / operador123")
+        print("   consultor / consultor123")
         
     except Exception as e:
         print(f"❌ Error: {e}")
