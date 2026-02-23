@@ -110,8 +110,9 @@ export default function DataViewer() {
                     <th>ID</th>
                     <th>CUPS</th>
                     <th>Desde</th>
-                    <th>KWh Gen (Total)</th>
-                    <th>Pago (Total)</th>
+                    <th>kWh Gen</th>
+                    <th>kWh Cons</th>
+                    <th>Pago (€)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -120,8 +121,9 @@ export default function DataViewer() {
                       <td>#{reg.id}</td>
                       <td>{reg.cups_cliente || "—"}</td>
                       <td>{reg.fecha_desde ? new Date(reg.fecha_desde).toLocaleDateString() : "—"}</td>
-                      <td>{reg.energia_neta_gen?.reduce((a, b) => Number(a) + Number(b), 0).toFixed(2) || "—"} kWh</td>
-                      <td>€ {reg.pago_tda?.reduce((a, b) => Number(a) + Number(b), 0).toFixed(2) || "—"}</td>
+                      <td style={{ fontWeight: 'bold' }}>{reg.total_neta_gen?.toFixed(2) || "0.00"}</td>
+                      <td>{reg.total_autoconsumida?.toFixed(2) || "0.00"}</td>
+                      <td style={{ color: '#2c3e50', fontWeight: 'bold' }}>{reg.total_pago?.toFixed(2) || "0.00"}</td>
                     </tr>
                   ))}
                 </tbody>

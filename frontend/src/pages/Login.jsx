@@ -102,7 +102,6 @@ export default function Login() {
         <div className="login-footer">
           <p className="text-muted">Credenciales de prueba:</p>
           <small>
-            <strong>Admin:</strong> admin@example.com / admin123<br/>
             <strong>Usuario:</strong> user@example.com / user123
           </small>
         </div>

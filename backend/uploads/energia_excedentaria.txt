@@ -1,0 +1,13 @@
+ENERGÍA EXCEDENTARIA - REGISTROS
+
+Registro 1 CUPS: ES0031405004ZZ8T0Z Instalación: GEN-MAD-001 Periodo:
+2025-01-01 a 2025-01-31 Tipo Autoconsumo: 41 Energía Neta Generada:
+150.25 Energía Autoconsumida: 140.10 Pago TDA: 12.50
+
+Registro 2 CUPS: ES0031405004ABCT1X Instalación: GEN-MAD-002 Periodo:
+2025-02-01 a 2025-02-28 Tipo Autoconsumo: 42 Energía Neta Generada:
+180.75 Energía Autoconsumida: 160.30 Pago TDA: 15.20
+
+Registro 3 CUPS: ES0031405004LMN45Y Instalación: GEN-MAD-003 Periodo:
+2025-03-01 a 2025-03-31 Tipo Autoconsumo: 43 Energía Neta Generada:
+210.10 Energía Autoconsumida: 190.80 Pago TDA: 18.75

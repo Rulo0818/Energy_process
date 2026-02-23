@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getArchivos, getArchivoStatus, getErroresArchivo } from "../services/api";
+import { getArchivos, getArchivoStatus, getErroresArchivo, getEnergia } from "../services/api";
 
 const formatDate = (dateStr) => {
   if (!dateStr) return "—";
@@ -32,44 +32,51 @@ export default function Archivos() {
   const [archivos, setArchivos] = useState([]);
   const [detalle, setDetalle] = useState(null);
   const [errores, setErrores] = useState([]);
+  const [registrosOk, setRegistrosOk] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingDetalle, setLoadingDetalle] = useState(false);
 
-  useEffect(() => {
-    let cancelled = false;
+  const loadArchivos = () => {
+    setLoading(true);
     getArchivos(50)
-      .then((res) => {
-        if (!cancelled) setArchivos(res.data || []);
+      .then((res) => setArchivos(res.data || []))
+      .catch(() => setArchivos([]))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    loadArchivos();
+  }, []);
+
+  const loadDetalle = () => {
+    if (!id) return;
+    setLoadingDetalle(true);
+    Promise.all([
+      getArchivoStatus(id),
+      getErroresArchivo(id),
+      getEnergia({ archivo_id: parseInt(id, 10) }),
+    ])
+      .then(([aRes, eRes, enRes]) => {
+        setDetalle(aRes.data);
+        setErrores(Array.isArray(eRes.data) ? eRes.data : []);
+        setRegistrosOk(enRes.data?.registros ?? []);
       })
       .catch(() => {
-        if (!cancelled) setArchivos([]);
+        setDetalle(null);
+        setErrores([]);
+        setRegistrosOk([]);
       })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => { cancelled = true; };
-  }, []);
+      .finally(() => setLoadingDetalle(false));
+  };
 
   useEffect(() => {
     if (!id) {
       setDetalle(null);
       setErrores([]);
+      setRegistrosOk([]);
       return;
     }
-    setLoadingDetalle(true);
-    Promise.all([
-      getArchivoStatus(id),
-      getErroresArchivo(id),
-    ])
-      .then(([aRes, eRes]) => {
-        setDetalle(aRes.data);
-        setErrores(eRes.data || []);
-      })
-      .catch(() => {
-        setDetalle(null);
-        setErrores([]);
-      })
-      .finally(() => setLoadingDetalle(false));
+    loadDetalle();
   }, [id]);
 
   if (id) {
@@ -91,12 +98,63 @@ export default function Archivos() {
           )}
         </header>
 
+        <div className="card" style={{ marginBottom: "1.5rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
+            <h2 className="card-title">Registros OK ({registrosOk.length})</h2>
+            <button type="button" className="btn btn-sm" onClick={loadDetalle} disabled={loadingDetalle}>
+              {loadingDetalle ? "Cargando…" : "Refrescar"}
+            </button>
+          </div>
+          {loadingDetalle ? (
+            <p className="text-muted">Cargando…</p>
+          ) : registrosOk.length === 0 ? (
+            <p className="empty-state">No hay registros correctos para este archivo.</p>
+          ) : (
+            <div className="table-wrap">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>CUPS</th>
+                    <th>Desde</th>
+                    <th>kWh Gen</th>
+                    <th>kWh Cons</th>
+                    <th>Pago (€)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {registrosOk.map((r) => (
+                    <tr key={r.id}>
+                      <td>{r.cups_cliente || "—"}</td>
+                      <td>{r.fecha_desde ? new Date(r.fecha_desde).toLocaleDateString() : "—"}</td>
+                      <td>{r.total_neta_gen != null ? Number(r.total_neta_gen).toFixed(2) : "—"}</td>
+                      <td>{r.total_autoconsumida != null ? Number(r.total_autoconsumida).toFixed(2) : "—"}</td>
+                      <td>{r.total_pago != null ? Number(r.total_pago).toFixed(2) : "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
         <div className="card">
-          <h2 className="card-title">Errores en este archivo</h2>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
+            <h2 className="card-title">Errores en este archivo ({errores.length})</h2>
+            <button type="button" className="btn btn-sm" onClick={loadDetalle} disabled={loadingDetalle}>
+              {loadingDetalle ? "Cargando…" : "Refrescar errores"}
+            </button>
+          </div>
+          {detalle?.estado === "procesando" && (
+            <p className="text-muted" style={{ marginBottom: "0.5rem" }}>
+              El archivo se está procesando. Refresca en unos segundos para ver los errores.
+            </p>
+          )}
           {loadingDetalle ? (
             <p className="text-muted">Cargando…</p>
           ) : errores.length === 0 ? (
-            <p className="empty-state">Sin errores para este archivo.</p>
+            <p className="empty-state">
+              {detalle?.estado === "completado" ? "Sin errores para este archivo." : "Aún no hay errores cargados. Si el archivo está procesando, usa «Refrescar errores»."}
+            </p>
           ) : (
             <div className="table-wrap">
               <table className="table">
@@ -138,6 +196,11 @@ export default function Archivos() {
       </header>
 
       <div className="card">
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.75rem" }}>
+          <button type="button" className="btn btn-sm" onClick={loadArchivos} disabled={loading}>
+            {loading ? "Cargando…" : "Refrescar lista"}
+          </button>
+        </div>
         {loading ? (
           <p className="text-muted">Cargando…</p>
         ) : archivos.length === 0 ? (
@@ -172,8 +235,11 @@ export default function Archivos() {
                     <td>{a.registros_exitosos ?? 0}</td>
                     <td>{a.registros_con_error ?? 0}</td>
                     <td className="text-muted">{formatDate(a.fecha_carga)}</td>
-                    <td>
+                    <td style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
                       <Link to={`/archivos/${a.id}`} className="btn btn-sm">
+                        Ver registros OK
+                      </Link>
+                      <Link to={`/archivos/${a.id}`} className="btn btn-sm" style={{ background: "var(--warning)", color: "#1a1a1a" }}>
                         Ver errores
                       </Link>
                     </td>

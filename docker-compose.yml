@@ -46,7 +46,9 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      redis:
+        condition: service_healthy
+    command: ["/bin/bash", "-c", "sed 's/\\r$//' /app/entrypoint.sh > /tmp/entrypoint.sh && chmod +x /tmp/entrypoint.sh && exec /bin/bash /tmp/entrypoint.sh"]
 
   worker:
     build:
@@ -61,10 +63,13 @@ services:
     volumes:
       - ./backend:/app
       - ./uploads:/app/uploads
+      - ./worker:/app/worker
     depends_on:
-      - postgres
-      - redis
-    command: celery -A app.celery_app worker -l info
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: ["/bin/bash", "-c", "sed 's/\\r$//' /app/worker/entrypoint_worker.sh > /tmp/entrypoint_worker.sh && chmod +x /tmp/entrypoint_worker.sh && exec /bin/bash /tmp/entrypoint_worker.sh"]
 
   frontend:
     build:

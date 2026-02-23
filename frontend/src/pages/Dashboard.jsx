@@ -50,31 +50,25 @@ export default function Dashboard() {
 
   useEffect(() => {
     let cancelled = false;
+    const defaults = {
+      stats: { total_archivos: 0, total_registros_energia: 0, total_errores: 0 },
+      usuarios: { total: 0, activos: 0, por_rol: {} },
+      clientes: { total: 0, activos: 0, por_provincia: {} },
+      archivos: [],
+    };
     const load = async () => {
-      try {
-        const [sRes, aRes, uRes, cRes] = await Promise.all([
-          getStats(), 
-          getArchivos(10),
-          getUsuariosStats(),
-          getClientesStats()
-        ]);
-        if (!cancelled) {
-          setStats(sRes.data);
-          setArchivos(aRes.data || []);
-          setUsuariosStats(uRes.data);
-          setClientesStats(cRes.data);
-        }
-      } catch (error) {
-        console.error("Error loading dashboard data:", error);
-        if (!cancelled) {
-          setStats({ total_archivos: 0, total_registros_energia: 0, total_errores: 0 });
-          setArchivos([]);
-          setUsuariosStats({ total: 0, activos: 0, por_rol: {} });
-          setClientesStats({ total: 0, activos: 0, por_provincia: {} });
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
+      const [sRes, aRes, uRes, cRes] = await Promise.allSettled([
+        getStats(),
+        getArchivos(10),
+        getUsuariosStats(),
+        getClientesStats(),
+      ]);
+      if (cancelled) return;
+      setStats(sRes.status === "fulfilled" ? sRes.value?.data : defaults.stats);
+      setArchivos(aRes.status === "fulfilled" ? (aRes.value?.data || []) : defaults.archivos);
+      setUsuariosStats(uRes.status === "fulfilled" ? uRes.value?.data : defaults.usuarios);
+      setClientesStats(cRes.status === "fulfilled" ? cRes.value?.data : defaults.clientes);
+      setLoading(false);
     };
     load();
     return () => { cancelled = true; };
