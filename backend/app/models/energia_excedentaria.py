@@ -36,6 +36,7 @@ class EnergiaExcedentaria(Base):
     tipo_autoconsumo = Column(
         Integer, ForeignKey("tipo_autoconsumo.codigo"), nullable=False
     )
+    cups_cliente = Column(String(255), nullable=False, index=True)
 
     energia_neta_gen = Column(ARRAY(Numeric(12, 3)), nullable=False)
     energia_autoconsumida = Column(ARRAY(Numeric(12, 3)), nullable=False)

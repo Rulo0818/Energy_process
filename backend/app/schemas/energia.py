@@ -2,7 +2,7 @@ from datetime import date
 from decimal import Decimal
 from typing import List
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, computed_field
 
 
 class EnergiaExcedenteResponse(BaseModel):
@@ -15,6 +15,21 @@ class EnergiaExcedenteResponse(BaseModel):
     energia_neta_gen: List[Decimal]
     energia_autoconsumida: List[Decimal]
     pago_tda: List[Decimal]
+
+    @computed_field
+    @property
+    def total_neta_gen(self) -> Decimal:
+        return sum(self.energia_neta_gen)
+
+    @computed_field
+    @property
+    def total_autoconsumida(self) -> Decimal:
+        return sum(self.energia_autoconsumida)
+
+    @computed_field
+    @property
+    def total_pago(self) -> Decimal:
+        return sum(self.pago_tda)
 
     @field_validator("energia_neta_gen", "energia_autoconsumida", "pago_tda")
     @classmethod

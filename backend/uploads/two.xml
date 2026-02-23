@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Factura>
+    <CUPS>ES0031406140541011PV0F</CUPS>
+    <InstalacionGenAutoconsumo>41</InstalacionGenAutoconsumo>
+    <Periodos>
+        <Periodo>
+            <FechaDesde>2026-01-01</FechaDesde>
+            <FechaHasta>2026-01-31</FechaHasta>
+            <ValorEnergiaNetaGen>150.50</ValorEnergiaNetaGen>
+            <ValorEnergiaAutoconsumida>45.20</ValorEnergiaAutoconsumida>
+        </Periodo>
+        <Periodo>
+            <FechaDesde>2026-01-01</FechaDesde>
+            <FechaHasta>2026-01-31</FechaHasta>
+            <ValorEnergiaNetaGen>120.00</ValorEnergiaNetaGen>
+            <ValorEnergiaAutoconsumida>30.00</ValorEnergiaAutoconsumida>
+        </Periodo>
+        <Periodo>
+            <FechaDesde>2026-01-01</FechaDesde>
+            <FechaHasta>2026-01-31</FechaHasta>
+            <ValorEnergiaNetaGen>100.00</ValorEnergiaNetaGen>
+            <ValorEnergiaAutoconsumida>20.00</ValorEnergiaAutoconsumida>
+        </Periodo>
+        <Periodo>
+            <FechaDesde>2026-01-01</FechaDesde>
+            <FechaHasta>2026-01-31</FechaHasta>
+            <ValorEnergiaNetaGen>80.00</ValorEnergiaNetaGen>
+            <ValorEnergiaAutoconsumida>15.00</ValorEnergiaAutoconsumida>
+        </Periodo>
+        <Periodo>
+            <FechaDesde>2026-01-01</FechaDesde>
+            <FechaHasta>2026-01-31</FechaHasta>
+            <ValorEnergiaNetaGen>90.00</ValorEnergiaNetaGen>
+            <ValorEnergiaAutoconsumida>18.00</ValorEnergiaAutoconsumida>
+        </Periodo>
+        <Periodo>
+            <FechaDesde>2026-01-01</FechaDesde>
+            <FechaHasta>2026-01-31</FechaHasta>
+            <ValorEnergiaNetaGen>110.00</ValorEnergiaNetaGen>
+            <ValorEnergiaAutoconsumida>25.00</ValorEnergiaAutoconsumida>
+        </Periodo>
+    </Periodos>
+</Factura>

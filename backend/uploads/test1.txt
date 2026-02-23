@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AutoconsumoColectivo>
+  <Cabecera>
+    <CUPS>ES0021000000000001AA</CUPS>
+    <TipoAutoconsumo>42</TipoAutoconsumo>
+    <PeriodoFacturacion>
+      <FechaDesde>2026-01-01</FechaDesde>
+      <FechaHasta>2026-01-31</FechaHasta>
+    </PeriodoFacturacion>
+  </Cabecera>
+  
+  <Registros>
+    <Registro>
+      <Fecha>2026-01-01</Fecha>
+      <Hora>0</Hora>
+      <EnergiaNetaGenerada>12.500</EnergiaNetaGenerada>
+      <EnergiaAutoconsumida>8.250</EnergiaAutoconsumida>
+      <PagoTDA>1.85</PagoTDA>
+    </Registro>
+    <Registro>
+      <Fecha>2026-01-01</Fecha>
+      <Hora>1</Hora>
+      <EnergiaNetaGenerada>10.200</EnergiaNetaGenerada>
+      <EnergiaAutoconsumida>6.100</EnergiaAutoconsumida>
+      <PagoTDA>1.42</PagoTDA>
+    </Registro>
+    <Registro>
+      <Fecha>2026-01-01</Fecha>
+      <Hora>2</Hora>
+      <EnergiaNetaGenerada>8.750</EnergiaNetaGenerada>
+      <EnergiaAutoconsumida>5.500</EnergiaAutoconsumida>
+      <PagoTDA>1.15</PagoTDA>
+    </Registro>
+    <Registro>
+      <Fecha>2026-01-02</Fecha>
+      <Hora>10</Hora>
+      <EnergiaNetaGenerada>45.300</EnergiaNetaGenerada>
+      <EnergiaAutoconsumida>32.150</EnergiaAutoconsumida>
+      <PagoTDA>5.25</PagoTDA>
+    </Registro>
+    <Registro>
+      <Fecha>2026-01-02</Fecha>
+      <Hora>11</Hora>
+      <EnergiaNetaGenerada>52.100</EnergiaNetaGenerada>
+      <EnergiaAutoconsumida>38.400</EnergiaAutoconsumida>
+      <PagoTDA>6.10</PagoTDA>
+    </Registro>
+    <Registro>
+      <Fecha>2026-01-02</Fecha>
+      <Hora>12</Hora>
+      <EnergiaNetaGenerada>58.750</EnergiaNetaGenerada>
+      <EnergiaAutoconsumida>41.200</EnergiaAutoconsumida>
+      <PagoTDA>6.85</PagoTDA>
+    </Registro>
+  </Registros>
+  
+  <Resumen>
+    <TotalEnergiaGenerada>187.600</TotalEnergiaGenerada>
+    <TotalEnergiaAutoconsumida>131.600</TotalEnergiaAutoconsumida>
+    <TotalPagoTDA>22.62</TotalPagoTDA>
+    <NumeroRegistros>6</NumeroRegistros>
+  </Resumen>
+</AutoconsumoColectivo>

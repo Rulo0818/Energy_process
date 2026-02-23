@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { uploadArchivo } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 export default function Carga() {
+  const { user } = useAuth();
   const [file, setFile] = useState(null);
-  const [usuario, setUsuario] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
 
@@ -16,8 +17,9 @@ export default function Carga() {
     setLoading(true);
     setMessage({ type: "", text: "" });
     try {
-      // Usar ID 1 por defecto (usuario sitko) hasta implementar login
-      const { data } = await uploadArchivo(file, 1);
+      // Usar el ID del usuario logueado o fallback a 1
+      const usuarioId = user?.id || 1;
+      const { data } = await uploadArchivo(file, usuarioId);
       setMessage({
         type: "success",
         text: `Archivo en cola (ID: ${data.archivo_id}). Estado: ${data.estado}. Puedes ver el estado en Archivos.`,
@@ -48,16 +50,6 @@ export default function Carga() {
               accept=".csv,.txt,.xml"
               onChange={(e) => setFile(e.target.files?.[0] ?? null)}
               className="form-input form-input--file"
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label">Usuario (opcional)</label>
-            <input
-              type="text"
-              placeholder="Ej. admin"
-              value={usuario}
-              onChange={(e) => setUsuario(e.target.value)}
-              className="form-input"
             />
           </div>
           <button type="submit" disabled={loading} className="btn btn-primary">

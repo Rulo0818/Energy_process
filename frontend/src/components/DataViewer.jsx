@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getArchivos, getEnergia, getErroresArchivo } from "../services/api";
+import { getArchivos, getEnergia, api } from "../services/api";
 import "./DataViewer.css";
 
 export default function DataViewer() {
@@ -16,12 +16,12 @@ export default function DataViewer() {
         const [archivosRes, energiaRes, erroresRes] = await Promise.all([
           getArchivos(100),
           getEnergia(),
-          fetch("http://localhost:8000/api/v1/errores").then(r => r.json()).catch(() => [])
+          api.get("/api/v1/errores").catch(() => ({ data: [] }))
         ]);
 
         setArchivos(archivosRes.data || []);
         setEnergia(energiaRes.data?.registros || []);
-        setErrores(erroresRes || []);
+        setErrores(Array.isArray(erroresRes.data) ? erroresRes.data : []);
       } catch (error) {
         console.error("Error cargando datos:", error);
       } finally {
@@ -71,7 +71,9 @@ export default function DataViewer() {
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Estado</th>
-                    <th>Registros</th>
+                    <th>Total</th>
+                    <th>OK</th>
+                    <th>Errores</th>
                     <th>Creado</th>
                   </tr>
                 </thead>
@@ -85,7 +87,9 @@ export default function DataViewer() {
                           {archivo.estado}
                         </span>
                       </td>
-                      <td>{archivo.registros_procesados || 0}</td>
+                      <td>{archivo.total_registros || 0}</td>
+                      <td style={{ color: "#4caf50" }}>{archivo.registros_exitosos || 0}</td>
+                      <td style={{ color: "#f44336" }}>{archivo.registros_con_error || 0}</td>
                       <td>{new Date(archivo.fecha_carga).toLocaleDateString()}</td>
                     </tr>
                   ))}
@@ -104,20 +108,22 @@ export default function DataViewer() {
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Cliente</th>
-                    <th>Fecha</th>
-                    <th>KWh</th>
-                    <th>Tarifa</th>
+                    <th>CUPS</th>
+                    <th>Desde</th>
+                    <th>kWh Gen</th>
+                    <th>kWh Cons</th>
+                    <th>Pago (€)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {energia.map((reg) => (
                     <tr key={reg.id}>
                       <td>#{reg.id}</td>
-                      <td>{reg.cliente_id || "—"}</td>
-                      <td>{reg.fecha_registro ? new Date(reg.fecha_registro).toLocaleDateString() : "—"}</td>
-                      <td>{reg.kwh_excedentarios?.toFixed(2) || "—"} kWh</td>
-                      <td>€ {reg.compensacion_economica?.toFixed(2) || "—"}</td>
+                      <td>{reg.cups_cliente || "—"}</td>
+                      <td>{reg.fecha_desde ? new Date(reg.fecha_desde).toLocaleDateString() : "—"}</td>
+                      <td style={{ fontWeight: 'bold' }}>{reg.total_neta_gen?.toFixed(2) || "0.00"}</td>
+                      <td>{reg.total_autoconsumida?.toFixed(2) || "0.00"}</td>
+                      <td style={{ color: '#2c3e50', fontWeight: 'bold' }}>{reg.total_pago?.toFixed(2) || "0.00"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -147,7 +153,7 @@ export default function DataViewer() {
                       <td>#{error.id}</td>
                       <td>Archivo #{error.archivo_id}</td>
                       <td>{error.linea_archivo}</td>
-                      <td>{error.descripcion_error}</td>
+                      <td>{error.descripcion}</td>
                       <td>
                         <span className="badge badge-error">{error.tipo_error}</span>
                       </td>

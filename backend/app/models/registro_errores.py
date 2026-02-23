@@ -21,13 +21,3 @@ class RegistroErrores(Base):
     fecha_registro = Column(DateTime, nullable=False, server_default=func.now())
 
     archivo = relationship("ArchivoProcesado", back_populates="errores")
-
-    __table_args__ = (
-        CheckConstraint(
-            "tipo_error IN ("
-            "'cliente_inexistente', 'tipo_no_soportado', 'formato_invalido', "
-            "'archivo_duplicado', 'inconsistencia_numerica', "
-            "'array_longitud_invalida', 'fecha_invalida')",
-            name="ck_tipo_error",
-        ),
-    )

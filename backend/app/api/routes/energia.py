@@ -17,13 +17,16 @@ def get_energia_registros(
     fecha_desde: Optional[date] = Query(None),
     fecha_hasta: Optional[date] = Query(None),
     tipo_autoconsumo: Optional[int] = Query(None),
+    archivo_id: Optional[int] = Query(None, description="Filtrar por ID de archivo (registros OK de ese archivo)"),
     db: Session = Depends(get_db),
 ):
     """
     Consulta registros de energía con filtros opcionales.
-    Retorna lista vacía si no hay resultados.
+    Use archivo_id para ver los registros OK de un archivo concreto.
     """
     query = db.query(EnergiaExcedentaria)
+    if archivo_id is not None:
+        query = query.filter(EnergiaExcedentaria.archivo_id == archivo_id)
     if cups:
         query = query.filter(EnergiaExcedentaria.cups_cliente == cups)
     if fecha_desde is not None:
@@ -33,7 +36,7 @@ def get_energia_registros(
     if tipo_autoconsumo is not None:
         query = query.filter(EnergiaExcedentaria.tipo_autoconsumo == tipo_autoconsumo)
 
-    registros = query.all()
+    registros = query.order_by(EnergiaExcedentaria.linea_archivo).all()
     return EnergiaListResponse(
         total=len(registros),
         registros=[EnergiaExcedenteResponse.model_validate(r) for r in registros],

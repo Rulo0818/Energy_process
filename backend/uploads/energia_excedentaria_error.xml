@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<energiaExcedentaria>
+
+    <!-- Registro 1: Tipo de autoconsumo inválido (99 no permitido) -->
+    <registro>
+        <cupsCliente>ES0031405098402001</cupsCliente>
+        <instalacionGen>GEN-ERR-004</instalacionGen>
+        <fechaDesde>2025-06-01</fechaDesde>
+        <fechaHasta>2025-06-30</fechaHasta>
+        <tipoAutoconsumo>99</tipoAutoconsumo>
+        <energiaNetaGen>
+            <p1>20</p1><p2>20</p2><p3>20</p3><p4>20</p4><p5>20</p5><p6>20</p6>
+        </energiaNetaGen>
+        <energiaAutoconsumida>
+            <p1>10</p1><p2>10</p2><p3>10</p3><p4>10</p4><p5>10</p5><p6>10</p6>
+        </energiaAutoconsumida>
+        <pagoTDA>
+            <p1>2</p1><p2>2</p2><p3>2</p3><p4>2</p4><p5>2</p5><p6>2</p6>
+        </pagoTDA>
+    </registro>
+
+    <!-- Registro 2: Valor no numérico en periodo p3 -->
+    <registro>
+        <cupsCliente>ES0031405098402002</cupsCliente>
+        <instalacionGen>GEN-ERR-005</instalacionGen>
+        <fechaDesde>2025-07-01</fechaDesde>
+        <fechaHasta>2025-07-31</fechaHasta>
+        <tipoAutoconsumo>12</tipoAutoconsumo>
+        <energiaNetaGen>
+            <p1>30</p1><p2>30</p2><p3>ABC</p3><p4>30</p4><p5>30</p5><p6>30</p6>
+        </energiaNetaGen>
+        <energiaAutoconsumida>
+            <p1>15</p1><p2>15</p2><p3>15</p3><p4>15</p4><p5>15</p5><p6>15</p6>
+        </energiaAutoconsumida>
+        <pagoTDA>
+            <p1>3</p1><p2>3</p2><p3>3</p3><p4>3</p4><p5>3</p5><p6>3</p6>
+        </pagoTDA>
+    </registro>
+
+    <!-- Registro 3: Energía autoconsumida mayor que energía neta generada -->
+    <registro>
+        <cupsCliente>ES0031405098402003</cupsCliente>
+        <instalacionGen>GEN-ERR-006</instalacionGen>
+        <fechaDesde>2025-08-01</fechaDesde>
+        <fechaHasta>2025-08-31</fechaHasta>
+        <tipoAutoconsumo>41</tipoAutoconsumo>
+        <energiaNetaGen>
+            <p1>10</p1><p2>10</p2><p3>10</p3><p4>10</p4><p5>10</p5><p6>10</p6>
+        </energiaNetaGen>
+        <energiaAutoconsumida>
+            <p1>15</p1><p2>15</p2><p3>15</p3><p4>15</p4><p5>15</p5><p6>15</p6>
+        </energiaAutoconsumida>
+        <pagoTDA>
+            <p1>4</p1><p2>4</p2><p3>4</p3><p4>4</p4><p5>4</p5><p6>4</p6>
+        </pagoTDA>
+    </registro>
+
+</energiaExcedentaria>
