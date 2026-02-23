@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
-from passlib.context import CryptContext
+import bcrypt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
@@ -9,9 +9,6 @@ from sqlalchemy.orm import Session
 from app.config import settings
 from app.api.deps import get_db
 from app.models import Usuario
-
-# Configuración de hashing de contraseñas
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Configuración de OAuth2
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
@@ -23,13 +20,19 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verificar si la contraseña coincide con el hash"""
-    return pwd_context.verify(plain_password, hashed_password)
+    """Verificar si la contraseña coincide con el hash (bcrypt)."""
+    try:
+        return bcrypt.checkpw(
+            plain_password.encode("utf-8"),
+            hashed_password.encode("utf-8") if isinstance(hashed_password, str) else hashed_password,
+        )
+    except Exception:
+        return False
 
 
 def get_password_hash(password: str) -> str:
-    """Generar hash de contraseña"""
-    return pwd_context.hash(password)
+    """Generar hash de contraseña con bcrypt."""
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
